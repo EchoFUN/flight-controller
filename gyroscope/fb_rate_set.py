@@ -11,5 +11,8 @@
 #
 #
 
+import serial
 
+sensor = serial.Serial(port='/dev/ttyAMA0', baudrate='9600', timeout=1)
 
+sensor.write('\xff')

@@ -40,8 +40,11 @@ def motor(ax):
     global pulse
 
     # Change the Duty Cycle based on the ax value.
-    rate = ax / 360 * 5
-    pulse.changeDutyCycle(5 + rate)
+    if (ax > 90 and ax < 360):
+        pulse.changeDutyCycle(5)
+    else:
+        pulse.changeDutyCycle(5 + ax / 360 * 5)
+    
 
 
 while True:
