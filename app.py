@@ -6,7 +6,7 @@
 # @date 2017-01-21 星期日
 #
 #
-# #fileOverview 树莓派串口操作事件，用来输入和输出陀螺仪数据信息；由陀螺仪的数据输出带动四轴马达的的调整；
+# @fileOverview 树莓派串口操作事件，用来输入和输出陀螺仪数据信息；由陀螺仪的数据输出带动四轴马达的的调整；
 #
 #
 # 
@@ -43,7 +43,7 @@ def motor(ax):
     if (ax > 90 and ax < 360):
         pulse.changeDutyCycle(5)
     else:
-        pulse.changeDutyCycle(5 + ax / 360 * 5)
+        pulse.changeDutyCycle(5 + ax / 180 * 5)
     
 
 
