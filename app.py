@@ -18,16 +18,30 @@ import serial
 import RPi.GPIO as GPIO
 import time
 
+OUTPUT_PORT = 7
+
 sensor = serial.Serial(port='/dev/ttyAMA0', baudrate='9600', timeout=1)
 
 
 def convert(hexVal):
     return int(codecs.encode(hexVal, 'hex'), 16)
 
-GPIO.setmode('BOARD')
-def motor():
 
-    pass
+GPIO.setmode('BOARD')
+
+GPIO.setup(OUTPUT_PORT, GPIO.OUT)
+GPIO.output(OUTPUT_PORT, False)
+
+pulse = GPIO.PWM(OUTPUT_PORT, 50)
+pulse.start(5)
+
+
+def motor(ax):
+    global pulse
+
+    # Change the Duty Cycle based on the ax value.
+    rate = ax / 360 * 5
+    pulse.changeDutyCycle(5 + rate)
 
 
 while True:
@@ -66,4 +80,6 @@ try:
 
 except KeyboardInterrupt:
     sensor.close()
+    pulse.stop()
+
     print('Close the sensor !')
