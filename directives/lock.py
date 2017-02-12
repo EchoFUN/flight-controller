@@ -7,13 +7,22 @@
 #
 #
 # 
-# @fileOverview 上锁 APM 飞行控制器
+# @fileOverview 解锁 APM 飞行控制器
 #
 #
 # 
 
 import pigpio
 
+pi = pigpio.pi()
+if not pi.connected:
+    print('Error connecting to the PIGPIO deamon.')
+    exit(0)
 
+# 偏航调动至最右，油门降低到最低维持两秒，既可解锁APM飞控
+pi.set_servo_pulsewidth(12, 1100)
+pi.set_servo_pulsewidth(16, 1000)
 
+time.sleep(2)
 
+pi.stop()
