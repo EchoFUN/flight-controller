@@ -20,12 +20,11 @@ if not pi.connected:
     print('Error connecting to the PIGPIO deamon.')
     exit(0)
 
-# 偏航调动至最右，油门降低到最低维持两秒，既可解锁APM飞控
+# 偏航调动至最右，油门降低到最低维持两秒以上，既可解锁APM飞控；解锁完成后回拨偏航摇杆；
 pi.set_servo_pulsewidth(12, 1900)
 pi.set_servo_pulsewidth(16, 1000)
 
-time.sleep(2)
+time.sleep(3)
 pi.set_servo_pulsewidth(12, 1500)
-time.sleep(2)
 
 pi.stop()
