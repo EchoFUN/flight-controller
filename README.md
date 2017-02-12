@@ -1,2 +1,2 @@
-# quadcopter
-Quadcopter run time code.
+# Flight Controller
+Used for control the QARD in the air.
