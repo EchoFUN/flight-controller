@@ -12,6 +12,7 @@
 #
 # 
 
+import time
 import pigpio
 
 pi = pigpio.pi()
