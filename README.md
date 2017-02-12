@@ -1,2 +1,3 @@
 # Flight Controller
-Used for control the QARD in the air.
+Used for control the APM QARD in the air.
+
