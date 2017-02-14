@@ -14,9 +14,15 @@
 
 import sys
 import time
-
+import pigpio
 import readchar
 
+import ConfigParser
+
+
+def safelyLand():
+
+    pass
 
 def readerEvent():
 
@@ -30,7 +36,35 @@ def readerEvent():
             sys.exit('Exit the controller.')
 
 
-if __name__ == '__main__':
-    readerEvent()
+def connectPi():
+    pi = pigpio.pi()
+    if not pi.connected:
+        print('Error connecting to the PIGPIO deamon.')
+        sys.exit()
 
-    
+    return pi
+
+
+import unlock from directives
+def unlockQuad():
+
+    pass
+
+
+if __name__ == '__main__':
+
+    try:
+
+        # Init the connection to the pigpio GPIO lib.
+        pi = connectPi()
+
+        # Unlock the quad first.
+        unlockQuad(pi)
+
+        # Enter the event loop, listening to the key evets.
+        readerEvent()
+
+    except EOFError:
+
+        # TODO Erorr handling here.
+        pass
