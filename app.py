@@ -26,6 +26,7 @@ from ConfigParser import ConfigParser
 conf = ConfigParser()
 
 conf.read('apm.conf')
+STEP = int(conf.get('SYS', 'step'))
 
 # 分别为偏航、油门、俯仰、翻滚四个通道
 channels = {'Y': 0, 'T': 0, 'P': 0, 'R': 0}
@@ -57,38 +58,38 @@ def readerEvent():
                 director.modes(token)
             # 仰
             elif token == 'w':
-                channels['P'] += 1
+                channels['P'] += STEP
                 director.pitch(channels['R'])
             # 俯
             elif token == 's':
-                channels['P'] -= 1
+                channels['P'] -= STEP
                 director.pitch(channels['R'])
             # 左翻转
             elif token == 'a':
-                channels['R'] += 1
+                channels['R'] += STEP
                 director.throttle(channels['R'])
             # 右翻转
             elif token == 'd':
-                channels['R'] -= 1
+                channels['R'] -= STEP
                 director.throttle(channels['R'])
 
         elif len(code) == 8:
 
             # 加油
             if token == 'A':
-                channels['T'] += 1
+                channels['T'] += STEP
                 director.throttle(channels['T'])
             # 减油
             elif token == 'B':
-                channels['T'] -= 1
+                channels['T'] -= STEP
                 director.throttle(channels['T'])
             # 右偏航
             elif token == 'C':
-                channels['Y'] += 1
+                channels['Y'] += STEP
                 director.yaw(channels['Y'])
             # 左偏航
             elif token == 'D':
-                channels['Y'] -= 1
+                channels['Y'] -= STEP
                 director.yaw(channels['Y'])
 
         # Exit when we  needed. But,  Make the quad landing safely before. 
@@ -116,7 +117,7 @@ if __name__ == '__main__':
 
         # Init the connection to the pigpio GPIO lib.
         print('connected to the pi ...')
-        pi = connectPi('192.168.10.109', '8888')
+        pi = connectPi(conf.get('SYS', 'url'), '8888')
         print('connected !')
 
         # Unlock the quad first.
