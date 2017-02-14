@@ -24,12 +24,13 @@ def readerEvent():
         key_code = repr(readchar.readkey())
         print(key_code)
 
-        
-
-        # Exit when needed.
+        # Exit when we  needed. But,  Make the quad landing safely before. 
         if key_code == "'\\x7f'":
+
             sys.exit('Exit the controller.')
 
 
 if __name__ == '__main__':
     readerEvent()
+
+    
