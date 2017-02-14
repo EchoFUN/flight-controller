@@ -13,10 +13,12 @@
 # 
 
 import sys
+
+import os
 import time
 import pigpio
 import readchar
-import directives
+import director
 
 from excepts import *
 
@@ -26,9 +28,9 @@ conf = ConfigParser()
 conf.read('apm.conf')
 
 # 分别为偏航、油门、俯仰、翻滚四个通道
-channels = {'YAW': 0, 'THROTTLE': 0, 'PITCH': 0, 'ROLL': 0}
+channels = {'Y': 0, 'T': 0, 'P': 0, 'R': 0}
 for i in channels.keys():
-    channels[i] = conf.get(i, 'pin')
+    channels[i] = int(conf.get(i, 'pin'))
 
 
 def safelyLand():
@@ -36,34 +38,60 @@ def safelyLand():
     pass
 
 
+def channelPrinter():
+    os.system('clear')
+
+
 def readerEvent():
 
     while True:
-        key_code = repr(readchar.readkey())
-        
-        if len(key_code) == 3:
-            pass
-        elif len(key_code) == 8:
+        code = repr(readchar.readkey())
+        token = code[-2]
 
-            if key_code[-2] == 'A':    # 上
-                channels['THROTTLE'] += 1
-                directives.throttle(channels['THROTTLE'])
-            elif key_code[-2] == 'B':  # 下
-                pass
-            elif key_code[-2] == 'C':  # 右
-                pass
-            elif key_code[-2] == 'D':  # 左
-                pass
+        if len(code) == 3:
+            if token in ['1', '2', '3', '4']:
+                director.modes(token)
+            elif token == 'w':
+                channels['P'] += 1
+                director.pitch(channels['R'])
+            elif token == 's':
+                channels['P'] -= 1
+                director.pitch(channels['R'])
+            elif token == 'a':
+                channels['R'] += 1
+                director.throttle(channels['R'])
+            elif token == 'd':
+                channels['R'] -= 1
+                director.throttle(channels['R'])
+
+        elif len(code) == 8:
+
+            # 加油
+            if token == 'A':
+                channels['T'] += 1
+                director.throttle(channels['T'])
+            # 减油
+            elif token == 'B':
+                channels['T'] -= 1
+                director.throttle(channels['T'])
+            # 右
+            elif token == 'C':
+                channels['Y'] += 1
+                director.yaw(channels['Y'])
+            # 左
+            elif token == 'D':
+                channels['Y'] -= 1
+                director.yaw(channels['Y'])
 
         # Exit when we  needed. But,  Make the quad landing safely before. 
-        if key_code == "'\\x7f'":
+        if code == "'\\x7f'":
 
             sys.exit('Exit the controller.')
-        print(key_code)
+        channelPrinter()
 
 
-def connectPi(url):
-    pi = pigpio.pi(url)
+def connectPi(url, port):
+    pi = pigpio.pi(url, port)
     if not pi.connected:
         raise PiConnectError
 
@@ -71,7 +99,7 @@ def connectPi(url):
 
 
 def unlockQuad(pi):
-    directives.unlock(pi)
+    director.unlock(pi)
 
 
 if __name__ == '__main__':
@@ -79,12 +107,17 @@ if __name__ == '__main__':
     try:
 
         # Init the connection to the pigpio GPIO lib.
-        # pi = connectPi('192.168.0.1:8080')
+        print('connected to the pi ...')
+        pi = connectPi('192.168.10.109', '8888')
+        print('connected !')
 
         # Unlock the quad first.
-        # unlockQuad(pi)
+        print('unlock the quad ...')
+        unlockQuad(pi)
+        print('unlocked !')
 
         # Enter the event loop, listening to the key evets.
+        channelPrinter()
         readerEvent()
 
     except EOFError:

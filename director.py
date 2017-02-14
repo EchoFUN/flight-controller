@@ -17,24 +17,35 @@ import time
 from ConfigParser import ConfigParser
 conf = ConfigParser()
 
+conf.read('apm.conf')
+
 
 def unlock(pi):
 
-    ch_yaw, ch_throttle = conf.sections('YAW'), conf.sections('THROTTLE')
-
-    pi.set_servo_pulsewidth(ch_yaw.get('pin'), 1900)
-    pi.set_servo_pulsewidth(ch_throttle.get('pin'), 1000)
+    pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), 1900)
+    pi.set_servo_pulsewidth(int(conf.get('T', 'pin')), 1000)
 
     time.sleep(3)
-    pi.set_servo_pulsewidth(ch_yaw.get('pin'), 1500)
+    pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), 1500)
 
     pi.stop()
 
 
-def unlock():
+def lock(pi):
     pass
 
 
-
 def throttle(value):
+    pass
+
+
+def yaw(value):
+    pass
+
+
+def pitch(value):
+    pass
+
+
+def modes(value):
     pass
