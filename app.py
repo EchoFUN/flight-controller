@@ -16,22 +16,19 @@ import sys
 import time
 import pigpio
 import readchar
+import directives
 
-import ConfigParser
+from excepts import *
 
+from ConfigParser import ConfigParser
+conf = ConfigParser()
 
-# 偏航通道
-YAW = 1500
+conf.read('apm.conf')
 
-# 油门通道
-THROTTLE = 1500
-
-# 俯仰通道
-PITCH = 1500
-
-# 翻滚通道
-ROLL = 1500
-
+# 分别为偏航、油门、俯仰、翻滚四个通道
+channels = {'YAW': 0, 'THROTTLE': 0, 'PITCH': 0, 'ROLL': 0}
+for i in channels.keys():
+    channels[i] = conf.get(i, 'pin')
 
 
 def safelyLand():
@@ -43,28 +40,38 @@ def readerEvent():
 
     while True:
         key_code = repr(readchar.readkey())
-        print(key_code)
         
+        if len(key_code) == 3:
+            pass
+        elif len(key_code) == 8:
+
+            if key_code[-2] == 'A':    # 上
+                channels['THROTTLE'] += 1
+                directives.throttle(channels['THROTTLE'])
+            elif key_code[-2] == 'B':  # 下
+                pass
+            elif key_code[-2] == 'C':  # 右
+                pass
+            elif key_code[-2] == 'D':  # 左
+                pass
 
         # Exit when we  needed. But,  Make the quad landing safely before. 
         if key_code == "'\\x7f'":
 
             sys.exit('Exit the controller.')
+        print(key_code)
 
 
-def connectPi():
-    pi = pigpio.pi()
+def connectPi(url):
+    pi = pigpio.pi(url)
     if not pi.connected:
-        print('Error connecting to the PIGPIO deamon.')
-        sys.exit()
+        raise PiConnectError
 
     return pi
 
 
-import unlock from directives
-def unlockQuad():
-
-    pass
+def unlockQuad(pi):
+    directives.unlock(pi)
 
 
 if __name__ == '__main__':
@@ -72,15 +79,18 @@ if __name__ == '__main__':
     try:
 
         # Init the connection to the pigpio GPIO lib.
-        pi = connectPi()
+        # pi = connectPi('192.168.0.1:8080')
 
         # Unlock the quad first.
-        unlockQuad(pi)
+        # unlockQuad(pi)
 
         # Enter the event loop, listening to the key evets.
         readerEvent()
 
     except EOFError:
+
+        pass
+    except PiConnectError:
 
         # TODO Erorr handling here.
         pass
