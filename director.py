@@ -20,7 +20,9 @@ conf = ConfigParser()
 conf.read('apm.conf')
 
 
-def unlock(pi):
+def unlock(ori):
+    global pi
+    pi = ori
 
     pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), 1900)
     pi.set_servo_pulsewidth(int(conf.get('T', 'pin')), 1000)
@@ -29,22 +31,45 @@ def unlock(pi):
     pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), 1500)
 
 
-
-def lock(pi):
+def lock(ori):
     pass
 
 
 def throttle(value):
-    pass
+    global pi
+    pi.set_servo_pulsewidth(int(conf.get('T', 'pin')), value)
 
 
 def yaw(value):
-    pass
+    global pi
+    pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), value)
 
 
 def pitch(value):
-    pass
+    global pi
+    pi.set_servo_pulsewidth(int(conf.get('P', 'pin')), value)
 
 
 def modes(value):
-    pass
+    global pi
+    pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), value)
+
+
+def roll(value):
+    global pi
+    pi.set_servo_pulsewidth(int(conf.get('R', 'pin')), value)
+
+
+def hardreset():
+    global pi
+
+    sections = conf.sections()
+    for i in range(len(sections)):
+
+        sec = sections[i]
+        if sec in ['SYS']:
+            continue
+
+        pin = int(conf.get(sec, 'pin'))
+        ini = int(conf.get(sec, 'ini'))
+        pi.set_servo_pulsewidth(pin, ini)

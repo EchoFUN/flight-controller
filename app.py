@@ -60,19 +60,19 @@ def readerEvent():
             # 仰
             elif token == 'w':
                 channels['P'] += STEP
-                director.pitch(channels['R'])
+                director.pitch(channels['P'])
             # 俯
             elif token == 's':
                 channels['P'] -= STEP
-                director.pitch(channels['R'])
+                director.pitch(channels['P'])
             # 左翻转
             elif token == 'a':
                 channels['R'] += STEP
-                director.throttle(channels['R'])
+                director.roll(channels['R'])
             # 右翻转
             elif token == 'd':
                 channels['R'] -= STEP
-                director.throttle(channels['R'])
+                director.roll(channels['R'])
 
         elif len(code) == 8:
 
@@ -117,17 +117,15 @@ if __name__ == '__main__':
     try:
 
         # Init the connection to the pigpio GPIO lib.
-        print('connected to the pi ...')
-        time.sleep(1)
+        os.system('clear')
+        print('connected to the pi ... ')
         pi = connectPi(conf.get('SYS', 'url'), '8888')
         print('connected !')
-        time.sleep(1)
 
         # Unlock the quad first.
         print('unlock the quad ...')
         unlockQuad(pi)
         print('unlocked !')
-        time.sleep(1)
 
         # Enter the event loop, listening to the key evets.
         channelPrinter()
@@ -142,4 +140,5 @@ if __name__ == '__main__':
         pass
 
     except ExitError:
-        pass
+        director.hardreset()
+        pi.stop()
