@@ -30,7 +30,7 @@ conf.read('apm.conf')
 # 分别为偏航、油门、俯仰、翻滚四个通道
 channels = {'Y': 0, 'T': 0, 'P': 0, 'R': 0}
 for i in channels.keys():
-    channels[i] = int(conf.get(i, 'pin'))
+    channels[i] = int(conf.get(i, 'ini'))
 
 
 def safelyLand():
@@ -40,6 +40,8 @@ def safelyLand():
 
 def channelPrinter():
     os.system('clear')
+    for i in channels.keys():
+        print(i + ': ' + str(channels[i]))
 
 
 def readerEvent():
@@ -49,17 +51,23 @@ def readerEvent():
         token = code[-2]
 
         if len(code) == 3:
+
+            # 模式
             if token in ['1', '2', '3', '4']:
                 director.modes(token)
+            # 仰
             elif token == 'w':
                 channels['P'] += 1
                 director.pitch(channels['R'])
+            # 俯
             elif token == 's':
                 channels['P'] -= 1
                 director.pitch(channels['R'])
+            # 左翻转
             elif token == 'a':
                 channels['R'] += 1
                 director.throttle(channels['R'])
+            # 右翻转
             elif token == 'd':
                 channels['R'] -= 1
                 director.throttle(channels['R'])
@@ -74,19 +82,19 @@ def readerEvent():
             elif token == 'B':
                 channels['T'] -= 1
                 director.throttle(channels['T'])
-            # 右
+            # 右偏航
             elif token == 'C':
                 channels['Y'] += 1
                 director.yaw(channels['Y'])
-            # 左
+            # 左偏航
             elif token == 'D':
                 channels['Y'] -= 1
                 director.yaw(channels['Y'])
 
         # Exit when we  needed. But,  Make the quad landing safely before. 
         if code == "'\\x7f'":
-
             sys.exit('Exit the controller.')
+
         channelPrinter()
 
 
