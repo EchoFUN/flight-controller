@@ -93,7 +93,7 @@ def readerEvent():
 
         # Exit when we  needed. But,  Make the quad landing safely before. 
         if code == "'\\x7f'":
-            sys.exit('Exit the controller.')
+            raise ExitError
 
         channelPrinter()
 
@@ -134,4 +134,7 @@ if __name__ == '__main__':
     except PiConnectError:
 
         # TODO Erorr handling here.
+        pass
+
+    except ExitError:
         pass

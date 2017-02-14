@@ -28,7 +28,6 @@ def unlock(pi):
     time.sleep(3)
     pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), 1500)
 
-    pi.stop()
 
 
 def lock(pi):

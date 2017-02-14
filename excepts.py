@@ -15,4 +15,10 @@
 class PiConnectError(Exception):
 
     def __init__(self):
-        self.value = 'Error connecting to the PIGPIO deamon.'
+        self.value = 'Error connecting to the PIGPIO deamon .'
+
+
+class ExitError(Exception):
+
+    def __init__(self):
+        self.value = 'Exit .'
