@@ -20,15 +20,31 @@ import readchar
 import ConfigParser
 
 
+# 偏航通道
+YAW = 1500
+
+# 油门通道
+THROTTLE = 1500
+
+# 俯仰通道
+PITCH = 1500
+
+# 翻滚通道
+ROLL = 1500
+
+
+
 def safelyLand():
 
     pass
+
 
 def readerEvent():
 
     while True:
         key_code = repr(readchar.readkey())
         print(key_code)
+        
 
         # Exit when we  needed. But,  Make the quad landing safely before. 
         if key_code == "'\\x7f'":
