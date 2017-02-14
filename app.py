@@ -42,6 +42,7 @@ def safelyLand():
 def channelPrinter():
     os.system('clear')
     for i in channels.keys():
+
         print(i + ': ' + str(channels[i]))
 
 
@@ -117,13 +118,16 @@ if __name__ == '__main__':
 
         # Init the connection to the pigpio GPIO lib.
         print('connected to the pi ...')
+        time.sleep(1)
         pi = connectPi(conf.get('SYS', 'url'), '8888')
         print('connected !')
+        time.sleep(1)
 
         # Unlock the quad first.
         print('unlock the quad ...')
         unlockQuad(pi)
         print('unlocked !')
+        time.sleep(1)
 
         # Enter the event loop, listening to the key evets.
         channelPrinter()

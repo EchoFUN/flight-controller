@@ -16,6 +16,7 @@ import time
 import sys
 import pigpio
 
+
 from ConfigParser import ConfigParser
 conf = ConfigParser()
 
@@ -37,15 +38,18 @@ try:
 
         pin = int(conf.get(sec, 'pin'))
         print('Pwm on pin ' + str(pin))
-        pi.set_servo_pulsewidth(pin, int(conf.get(sec, 'min')))
+
+        min, max, ini = int(conf.get(sec, 'min')), int(conf.get( sec, 'max')), int(conf.get(sec, 'ini'))
+        pi.set_servo_pulsewidth(pin, min)
         time.sleep(0.5)
-        pi.set_servo_pulsewidth(pin, int(conf.get(sec, 'max')))
+        pi.set_servo_pulsewidth(pin, max)
         time.sleep(0.5)
-        pi.set_servo_pulsewidth(pin, int(conf.get(sec, 'ini')))
+        pi.set_servo_pulsewidth(pin, ini)
         time.sleep(0.5)
 
     pi.stop()
     sys.exit('Done !')
+
 
 except ValueError:
     sys.exit('config file error !')
