@@ -31,6 +31,10 @@ def unlock(ori):
     pi.set_servo_pulsewidth(int(conf.get('Y', 'pin')), 1500)
 
 
+def modes(mode):
+    pass
+
+
 def lock(ori):
     pass
 

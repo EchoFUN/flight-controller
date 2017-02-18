@@ -59,19 +59,19 @@ def readerEvent():
                 director.modes(token)
             # 仰
             elif token == 'w':
-                channels['P'] += STEP
+                channels['P'] -= STEP
                 director.pitch(channels['P'])
             # 俯
             elif token == 's':
-                channels['P'] -= STEP
+                channels['P'] += STEP
                 director.pitch(channels['P'])
             # 左翻转
             elif token == 'a':
-                channels['R'] += STEP
+                channels['R'] -= STEP
                 director.roll(channels['R'])
             # 右翻转
             elif token == 'd':
-                channels['R'] -= STEP
+                channels['R'] += STEP
                 director.roll(channels['R'])
 
         elif len(code) == 8:
